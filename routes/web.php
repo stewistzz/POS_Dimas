@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LevelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionController;
 
@@ -40,3 +41,8 @@ Route::get('/user/{name?}/id/{id?}', function ($name = 'John', $id = 1) {
 
 // halaman transaksi
 Route::get('/transaksi', [TransactionController::class, 'transaksi']);
+
+
+// praktikum implementasi db facade
+// memodifikasi route untuk /level
+Route::get('/level', [LevelController::class, 'index']);

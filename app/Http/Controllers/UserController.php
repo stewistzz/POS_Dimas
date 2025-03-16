@@ -55,7 +55,7 @@ class UserController extends Controller
         // }) ;
         // return view('user', ['data' => $user]);
 
-        // // modifikasi perubahan dari js 4  first dan juga find or fail
+        // // modifikasi perubahan dari js 4-first dan juga find or fail
         // $user = UserModel::where('username','manager9')->firstOrFail();
         // return view('user', ['data' => $user]);
 
@@ -64,15 +64,72 @@ class UserController extends Controller
         // // dd($user);
         // return view('user', ['data' => $user]);
 
-        // modifikasi perubahan dari js 4  retrieving agregate
-        $user = UserModel::firstOrNew([
-            'username' => 'manager',
-            'nama' => 'Manager',
+        // // modifikasi perubahan dari js 4-retrieving agregate
+        // $user = UserModel::firstOrNew([
+        //     'username' => 'manager',
+        //     'nama' => 'Manager',
+        //     'password' => Hash::make('12345'),
+        //     'level_id' => 2
+        // ]);
+        // $user->save();
+
+        // return view('user', ['data' => $user]);
+
+
+        // // modifikasi perubahan dari js 4-attribute changes
+        // $user = UserModel::create([
+        //     'username' => 'manager55',
+        //     'nama' => 'Manager55',
+        //     'password' => Hash::make('12345'),
+        //     'level_id' => 2
+        // ]);
+        // $user->username = 'manager56';
+
+        // // Mengecek perubahan pada model
+        // $user->isDirty(); // true
+        // $user->isDirty('username'); // true
+        // $user->isDirty('nama'); // false
+        // $user->isDirty(['nama', 'username']); // true
+
+        // // Mengecek apakah model dalam keadaan bersih
+        // $user->isClean(); // false
+        // $user->isClean('username'); // false
+        // $user->isClean('nama'); // true
+        // $user->isClean(['nama', 'username']); // false
+
+        // // Menyimpan perubahan ke database
+        // $user->save();
+
+        // // Setelah disimpan, isDirty akan menjadi false
+        // $user->isDirty(); // false
+
+        // $user->isClean(); // true
+
+        // // Debugging untuk melihat hasil
+        // dd($user->isDirty());
+
+
+        // Membuat user baru dengan Eloquent
+        $user = UserModel::create([
+            'username' => 'manager11',
+            'nama' => 'Manager11',
             'password' => Hash::make('12345'),
-            'level_id' => 2
+            'level_id' => 2,
         ]);
+
+        // Mengubah username
+        $user->username = 'manager12';
+
+        // Menyimpan perubahan ke database
         $user->save();
-        
-        return view('user', ['data' => $user]);
+
+        // Mengecek perubahan setelah penyimpanan
+        $user->wasChanged(); // true
+        $user->wasChanged('username'); // true
+        $user->wasChanged(['username', 'level_id']); // true
+        $user->wasChanged('nama'); // false
+
+        // Debugging untuk melihat hasil perubahan
+        dd($user->wasChanged(['nama', 'username'])); // true
     }
 }

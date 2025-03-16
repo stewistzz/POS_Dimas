@@ -29,12 +29,20 @@ class UserController extends Controller
         // ];
         // UserModel::insert($data); // tambahkan data ke tabel m_user
 
-        // bagian 3
-        $data = [
-            'nama' => 'Pelanggan Pertama',
-        ];
-        UserModel::where('username', 'customer-1')->update($data);
+        // // bagian 3
+        // $data = [
+        //     'nama' => 'Pelanggan Pertama',
+        // ];
+        // UserModel::where('username', 'customer-1')->update($data);
 
+        // eloquent ORM
+        $data = [
+            'level_id' => 2,
+            'username' => 'manager_tiga',
+            'nama' => 'Manager 3',
+            'password' => Hash::make('12345')
+        ];
+        UserModel::create($data);
 
         // bagian 1
         // coba akses model UserModel

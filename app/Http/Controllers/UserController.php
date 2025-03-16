@@ -55,8 +55,13 @@ class UserController extends Controller
         // }) ;
         // return view('user', ['data' => $user]);
 
-        // modifikasi perubahan dari js 4
-        $user = UserModel::where('username','manager9')->firstOrFail();
+        // // modifikasi perubahan dari js 4  first dan juga find or fail
+        // $user = UserModel::where('username','manager9')->firstOrFail();
+        // return view('user', ['data' => $user]);
+
+        // modifikasi perubahan dari js 4  retrieving agregate
+        $user = UserModel::where('level_id', 2)->count();
+        // dd($user);
         return view('user', ['data' => $user]);
     }
 }

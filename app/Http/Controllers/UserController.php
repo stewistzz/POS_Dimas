@@ -133,7 +133,8 @@ class UserController extends Controller
         // dd($user->wasChanged(['nama', 'username'])); // true
 
         // modifikasi perubahan dari js 4-CRUD
-        $user = UserModel::all();
+        $user = UserModel::with('level')->get();
+        // dd($user);
         return view('user', ['data' => $user]);
     }
 
@@ -177,7 +178,7 @@ class UserController extends Controller
     public function hapus($id) {
         $user = UserModel::find($id);
         $user->delete();
-        
+
         return redirect('/user');
     }
 }

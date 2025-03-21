@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserModel;
+use App\Models\LevelModel;
 
 use Illuminate\Http\Request;
 
@@ -133,7 +134,7 @@ class UserController extends Controller
         // dd($user->wasChanged(['nama', 'username'])); // true
 
         // modifikasi perubahan dari js 4-CRUD
-        $user = UserModel::with('level')->get();
+        $user = LevelModel::with('user')->get();
         // dd($user);
         return view('user', ['data' => $user]);
     }

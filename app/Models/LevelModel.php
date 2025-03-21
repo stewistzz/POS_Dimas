@@ -10,7 +10,9 @@ class LevelModel extends Model
 {
     use HasFactory;
 
+    protected $table = 'm_level';
+
     public function user(): BelongsTo {
-        return $this->belongsTo(UserModel::class);
+        return $this->belongsTo(UserModel::class, 'level_id', 'level_id');
     }
 }

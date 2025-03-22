@@ -6,6 +6,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\WelcomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +24,10 @@ use App\Http\Controllers\TransactionController;
 // });
 
 // halaman utama/home
-Route::get('/', function() {
-    return view('home');
-});
+// Route::get('/', function() {
+//     return view('home');
+// });
+Route::get('/', [WelcomeController::class, 'index']);  
 
 
 // route untuk halaman category

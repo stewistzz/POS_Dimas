@@ -41,38 +41,52 @@ Route::group(['prefix' => 'user'], function () {
     Route::delete('/{id}', [UserController::class, 'destroy']); // menghapus data user
 });
 
-
-
-// route untuk halaman category
-Route::prefix('category')->group(function () {
-    Route::get('/food-beverage', [CategoryController::class, 'food']);
-    Route::get('/beauty-health', [CategoryController::class, 'beauty']);
-    Route::get('/home-care', [CategoryController::class, 'home']);
-    Route::get('/baby-kid', [CategoryController::class, 'baby']);
+// untuk tabel m_level
+Route::group(['prefix' => 'level'], function () {
+    Route::get('/', [LevelController::class, 'index']); // menampilkan halaman awal level
+    Route::post('/list', [LevelController::class, 'list']); // menampilkan data level dalam bentuk json untuk datatables
+    Route::get('/create', [LevelController::class, 'create']); // menampilkan halaman form tambah level
+    Route::post('/', [LevelController::class, 'store']); // menyimpan data level baru
+    Route::get('/{id}', [LevelController::class, 'show']); // menampilkan detail level
+    Route::get('/{id}/edit', [LevelController::class, 'edit']); // menampilkan halaman form edit level
+    Route::put('/{id}', [LevelController::class, 'update']); // menyimpan perubahan data level
+    Route::delete('/{id}', [LevelController::class, 'destroy']); // menghapus data level
 });
 
-// halaman user
-Route::get('/user/{name?}/id/{id?}', function ($name = 'John', $id = 1) {
-    return 'Nama saya ' . $name . ' dengan id ' . $id;
-});
 
-// halaman transaksi
-Route::get('/transaksi', [TransactionController::class, 'transaksi']);
+
+
+
+// // route untuk halaman category
+// Route::prefix('category')->group(function () {
+//     Route::get('/food-beverage', [CategoryController::class, 'food']);
+//     Route::get('/beauty-health', [CategoryController::class, 'beauty']);
+//     Route::get('/home-care', [CategoryController::class, 'home']);
+//     Route::get('/baby-kid', [CategoryController::class, 'baby']);
+// });
+
+// // halaman user
+// Route::get('/user/{name?}/id/{id?}', function ($name = 'John', $id = 1) {
+//     return 'Nama saya ' . $name . ' dengan id ' . $id;
+// });
+
+// // halaman transaksi
+// Route::get('/transaksi', [TransactionController::class, 'transaksi']);
 
 
 // praktikum implementasi db facade
 // memodifikasi route untuk /level
-Route::get('/level', [LevelController::class, 'index']);
-Route::get('/kategori', [KategoriController::class, 'index']);
-Route::get('/user', [UserController::class, 'index']);
+// Route::get('/level', [LevelController::class, 'index']);
+// Route::get('/kategori', [KategoriController::class, 'index']);
+// Route::get('/user', [UserController::class, 'index']);
 
 // route untuk mengisi data
-Route::get('/user/tambah', [UserController::class, 'tambah']);
+// Route::get('/user/tambah', [UserController::class, 'tambah']);
 
-Route::post('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
+// Route::post('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
 
-Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
+// Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
 
-Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
+// Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
 
-Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
+// Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);

@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LevelModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'm_level';
+    protected $table = 'm_level'; // Nama tabel sesuai dengan yang ada di database
+    protected $primaryKey = 'level_id'; 
+    public $timestamps = false; // Jika tidak menggunakan created_at dan updated_at
 
-    public function user(): BelongsTo {
-        return $this->belongsTo(UserModel::class, 'level_id', 'level_id');
-    }
+    protected $fillable = ['level_kode', 'level_nama']; // Kolom yang dapat diisi secara massal
 }

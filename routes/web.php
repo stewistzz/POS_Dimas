@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WelcomeController;
@@ -53,7 +55,41 @@ Route::group(['prefix' => 'level'], function () {
     Route::delete('/{id}', [LevelController::class, 'destroy']); // menghapus data level
 });
 
+// untuk tabel m_kegtegori
+Route::group(['prefix' => 'kategori'], function () {
+    Route::get('/', [KategoriController::class, 'index']); // menampilkan halaman awal level
+    Route::post('/list', [KategoriController::class, 'list']); // menampilkan data level dalam bentuk json untuk datatables
+    Route::get('/create', [KategoriController::class, 'create']); // menampilkan halaman form tambah level
+    Route::post('/', [KategoriController::class, 'store']); // menyimpan data level baru
+    Route::get('/{id}', [KategoriController::class, 'show']); // menampilkan detail level
+    Route::get('/{id}/edit', [KategoriController::class, 'edit']); // menampilkan halaman form edit level
+    Route::put('/{id}', [KategoriController::class, 'update']); // menyimpan perubahan data level
+    Route::delete('/{id}', [KategoriController::class, 'destroy']); // menghapus data level
+});
 
+// untuk tabel m_supplier
+Route::group(['prefix' => 'supplier'], function () {
+    Route::get('/', [SupplierController::class, 'index']); // menampilkan halaman awal level
+    Route::post('/list', [SupplierController::class, 'list']); // menampilkan data level dalam bentuk json untuk datatables
+    Route::get('/create', [SupplierController::class, 'create']); // menampilkan halaman form tambah level
+    Route::post('/', [SupplierController::class, 'store']); // menyimpan data level baru
+    Route::get('/{id}', [SupplierController::class, 'show']); // menampilkan detail level
+    Route::get('/{id}/edit', [SupplierController::class, 'edit']); // menampilkan halaman form edit level
+    Route::put('/{id}', [SupplierController::class, 'update']); // menyimpan perubahan data level
+    Route::delete('/{id}', [SupplierController::class, 'destroy']); // menghapus data level
+});
+
+// untuk tabel m_barang
+Route::group(['prefix' => 'barang'], function () {
+    Route::get('/', [BarangController::class, 'index']); // menampilkan halaman awal level
+    Route::post('/list', [BarangController::class, 'list']); // menampilkan data level dalam bentuk json untuk datatables
+    Route::get('/create', [BarangController::class, 'create']); // menampilkan halaman form tambah level
+    Route::post('/', [BarangController::class, 'store']); // menyimpan data level baru
+    Route::get('/{id}', [BarangController::class, 'show']); // menampilkan detail level
+    Route::get('/{id}/edit', [BarangController::class, 'edit']); // menampilkan halaman form edit level
+    Route::put('/{id}', [BarangController::class, 'update']); // menyimpan perubahan data level
+    Route::delete('/{id}', [BarangController::class, 'destroy']); // menghapus data level
+});
 
 
 

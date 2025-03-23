@@ -24,7 +24,7 @@ class LevelController extends Controller
 
         $activeMenu = 'level'; // set menu yang sedang aktif
 
-        $level = LevelModel::all(); // ambil data level untuk filter level
+        
 
         return view('level.index', [
             'breadcrumb' => $breadcrumb,

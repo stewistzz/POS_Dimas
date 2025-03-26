@@ -85,14 +85,20 @@ Route::group(['prefix' => 'level'], function () {
 
 // untuk tabel m_kegtegori
 Route::group(['prefix' => 'kategori'], function () {
-    Route::get('/', [KategoriController::class, 'index']); // menampilkan halaman awal level
-    Route::post('/list', [KategoriController::class, 'list']); // menampilkan data level dalam bentuk json untuk datatables
-    Route::get('/create', [KategoriController::class, 'create']); // menampilkan halaman form tambah level
-    Route::post('/', [KategoriController::class, 'store']); // menyimpan data level baru
-    Route::get('/{id}', [KategoriController::class, 'show']); // menampilkan detail level
-    Route::get('/{id}/edit', [KategoriController::class, 'edit']); // menampilkan halaman form edit level
-    Route::put('/{id}', [KategoriController::class, 'update']); // menyimpan perubahan data level
-    Route::delete('/{id}', [KategoriController::class, 'destroy']); // menghapus data level
+    Route::get('/', [KategoriController::class, 'index']);
+    Route::post('/list', [KategoriController::class, 'list']);
+    Route::get('/create', [KategoriController::class, 'create']);
+    Route::post('/', [KategoriController::class, 'store']);
+    Route::get('/create_ajax', [KategoriController::class, 'create_ajax']);
+    Route::post('/ajax', [KategoriController::class, 'store_ajax']);
+    Route::get('/{id}', [KategoriController::class, 'show']);
+    Route::get('/{id}/edit', [KategoriController::class, 'edit']);
+    Route::put('/{id}', [KategoriController::class, 'update']);
+    Route::get('/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']);
+    Route::put('/{id}/update_ajax', [KategoriController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
+    Route::delete('/{id}', [KategoriController::class, 'destroy']);
 });
 
 // untuk tabel m_supplier

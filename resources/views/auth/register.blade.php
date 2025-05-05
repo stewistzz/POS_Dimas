@@ -31,10 +31,23 @@
                 <a href="{{ url('/') }}" class="h1"><b>Admin</b>LTE</a>
             </div>
             <div class="card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
+                <!-- Ganti Judul -->
+                <p class="login-box-msg">Register akun Staff</p>
 
-                <form action="{{ url('login') }}" method="POST" id="form-login">
+                <form action="{{ url('register') }}" method="POST" id="form-register">
                     @csrf
+
+                    <div class="input-group mb-3">
+                        <input type="text" id="nama" name="nama" class="form-control"
+                            placeholder="Nama Lengkap">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <small id="error-nama" class="error-text text-danger"></small>
+
                     <div class="input-group mb-3">
                         <input type="text" id="username" name="username" class="form-control"
                             placeholder="Username">
@@ -57,24 +70,24 @@
                     </div>
                     <small id="error-password" class="error-text text-danger"></small>
 
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember">
-                                <label for="remember">Remember Me</label>
+                    <div class="input-group mb-3">
+                        <input type="password" id="password_confirmation" name="password_confirmation"
+                            class="form-control" placeholder="Konfirmasi Password">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
                             </div>
                         </div>
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    </div>
+                    <small id="error-password_confirmation" class="error-text text-danger"></small>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">Daftar</button>
                         </div>
                     </div>
                 </form>
 
-                <!-- Tambahan tombol Register -->
-                <div class="text-center mt-3">
-                    <p>Belum punya akun?</p>
-                    <a href="{{ url('register') }}" class="btn btn-outline-secondary btn-block">Register</a>
-                </div>
             </div>
             <!-- /.card-body -->
         </div>
@@ -106,8 +119,12 @@
         });
 
         $(document).ready(function() {
-            $("#form-login").validate({
+            $("#form-register").validate({
                 rules: {
+                    nama: {
+                        required: true,
+                        minlength: 3
+                    },
                     username: {
                         required: true,
                         minlength: 4,
@@ -115,8 +132,11 @@
                     },
                     password: {
                         required: true,
-                        minlength: 5,
-                        maxlength: 20
+                        minlength: 6
+                    },
+                    password_confirmation: {
+                        required: true,
+                        equalTo: "#password"
                     }
                 },
                 submitHandler: function(form) {
@@ -140,7 +160,7 @@
                                 });
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Terjadi Kesalahan',
+                                    title: 'Gagal',
                                     text: response.message
                                 });
                             }
@@ -153,10 +173,10 @@
                     error.addClass('invalid-feedback');
                     element.closest('.input-group').append(error);
                 },
-                highlight: function(element, errorClass, validClass) {
+                highlight: function(element) {
                     $(element).addClass('is-invalid');
                 },
-                unhighlight: function(element, errorClass, validClass) {
+                unhighlight: function(element) {
                     $(element).removeClass('is-invalid');
                 }
             });

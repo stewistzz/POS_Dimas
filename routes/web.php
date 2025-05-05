@@ -43,6 +43,11 @@ Route::post('login', [AuthController::class, 'postLogin']);
 // Route logout dengan middleware auth
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
+// route register
+Route::get('register', [AuthController::class, 'register'])->name('register');
+Route::post('register', [AuthController::class, 'postRegister']);
+
+
 
 // Group route yang memerlukan autentikasi
 Route::middleware('auth')->group(function () {

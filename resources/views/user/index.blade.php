@@ -90,7 +90,7 @@
                         searchable: false,
                         render: function(data) {
                             if (data) {
-                                return `<img src="/storage/uploads/photo/${data}" width="100" class="rounded-circle"/>`;
+                                return `<img src="..//public/storage/uploads/photo/${data}" width="100" class="rounded-circle"/>`;
 
                             }
                             return `<span class="text-muted"></span>`;

@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
                 'level_id' => 1, 
                 'username' => 'admin',
                 'nama' => 'Administrator',
-                'password' => Hash::make('12345'),
+                'password' => Hash::make('123456'),
                 'created_at' => NOW()
             ],
             [
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
                 'level_id' => 2, 
                 'username' => 'manager',
                 'nama' => 'Manager',
-                'password' => Hash::make('12345'),
+                'password' => Hash::make('123456'),
                 'created_at' => NOW()
             ],
             [
@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
                 'level_id' => 3, 
                 'username' => 'staff',
                 'nama' => 'Staff/Kasir',
-                'password' => Hash::make('12345'),
+                'password' => Hash::make('123465'),
                 'created_at' => NOW()
             ]
         ];

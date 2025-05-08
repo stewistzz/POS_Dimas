@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\LevelModel;
 use App\Models\UserModel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Yajra\DataTables\Facades\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Barryvdh\DomPDF\Facade\Pdf;
-
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -36,8 +36,10 @@ class UserController extends Controller
 
     public function list(Request $request)
     {
-        $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
+        $users = UserModel::select('user_id', 'username', 'nama', 'level_id', 'photo')
             ->with('level');
+            
+        $users->get();
 
         // Filter data user berdasarkan level_id if ($request->level_id){
         if ($request->level_id) {
@@ -46,9 +48,15 @@ class UserController extends Controller
 
         return DataTables::of($users)
             ->addIndexColumn() // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
-            ->addColumn('aksi', function ($user) {
-                $btn = '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+            ->addColumn('aksi', function ($user) { // menambahkan kolom aksi
+                /* $btn = '<a href="'.url('/user/' . $user->user_id).'" class="btn btn-info btn- sm">Detail</a> ';
+                $btn .= '<a href="'.url('/user/' . $user->user_id . '/edit').'" class="btn btn- warning btn-sm">Edit</a> ';
+                $btn .= '<form class="d-inline-block" method="POST" action="'. url('/user/'.$user-
+                >user_id).'">'
+                . csrf_field() . method_field('DELETE') .
+                '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';*/
+                // $btn = '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn = '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
@@ -190,6 +198,8 @@ class UserController extends Controller
         }
     }
 
+
+
     public function create_ajax()
     {
         $level = LevelModel::select('level_id', 'level_nama')->get();
@@ -205,27 +215,51 @@ class UserController extends Controller
                 'level_id' => 'required|integer',
                 'username' => 'required|string|min:3|unique:m_user,username',
                 'nama' => 'required|string|max:100',
-                'password' => 'required|min:6'
+                'password' => 'required|min:6',
+                'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // max 2MB
             ];
+
 
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => false, // response status, false: error/gagal, true: berhasil
+                    'status' => false,
                     'message' => 'Validasi Gagal',
-                    'msgField' => $validator->errors(), // pesan error validasi
+                    'msgField' => $validator->errors(),
                 ]);
             }
 
-            UserModel::create($request->all());
+            // Simpan file foto jika ada
+            $photoName = null;
+
+            if ($request->hasFile('photo')) {
+
+                $file = $request->file('photo');
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/uploads/photo/', $filename);
+                unset($request['photo']);
+                $photoName = $filename;
+            }
+
+            // Simpan data user
+            UserModel::create([
+                'level_id' => $request->level_id,
+                'username' => $request->username,
+                'nama' => $request->nama,
+                'password' => bcrypt($request->password),
+                'photo' => $photoName,
+            ]);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data user berhasil disimpan'
             ]);
         }
-        redirect('/');
+
+        return redirect('/');
     }
+
 
     public function edit_ajax(string $id)
     {
@@ -237,44 +271,70 @@ class UserController extends Controller
 
     public function update_ajax(Request $request, $id)
     {
-        // cek apakah request dari ajax
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'level_id' => 'required|integer',
                 'username' => 'required|max:20|unique:m_user,username,' . $id . ',user_id',
                 'nama'    => 'required|max:100',
-                'password' => 'nullable|min:6|max:20'
+                'password' => 'nullable|min:6|max:20',
+                'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Tambahkan validasi file
             ];
-            // use Illuminate\Support\Facades\Validator;
+
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'    => false,    // respon json, true: berhasil, false: gagal 'message' => 'Validasi gagal.',
-                    'msgField' => $validator->errors() // menunjukkan field mana yang error
+                    'status'    => false,
+                    'msgField' => $validator->errors()
                 ]);
             }
 
-            $check = UserModel::find($id);
-            if ($check) {
-                if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari
-                    $request->request->remove('password');
-                }
-
-                $check->update($request->all());
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data berhasil diupdate'
-                ]);
-            } else {
+            $user = UserModel::find($id);
+            if (!$user) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Data tidak ditemukan'
                 ]);
             }
+
+            // Hapus field password kalau kosong
+            if (!$request->filled('password')) {
+                $request->request->remove('password');
+            } else {
+                // Enkripsi password jika ada
+                $request->merge([
+                    'password' => bcrypt($request->password)
+                ]);
+            }
+
+            $params = $request->all();
+
+            if ($request->hasFile('photo')) {
+                if ($user->photo && Storage::exists('public/uploads/photo/' . $user->photo)) {
+                    Storage::delete('public/uploads/photo/' . $user->photo);
+                }
+
+                $file = $request->file('photo');
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/uploads/photo/', $filename);
+                if(isset($params['photo'])) unset($params['photo']);
+                $params['photo'] = $filename;
+            }
+
+            if(isset($params['_token'])) unset($params['_token']);
+            if(isset($params['_method'])) unset($params['_method']);
+
+            UserModel::where('user_id', $id)->update($params);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil diupdate'
+            ]);
         }
+
         return redirect('/');
     }
+
 
     public function confirm_ajax(string $id)
     {
@@ -301,8 +361,10 @@ class UserController extends Controller
                 ]);
             }
         }
+
         return redirect('/');
     }
+
     public function import()
     {
         return view('user.import');
@@ -430,4 +492,5 @@ class UserController extends Controller
 
         return $pdf->stream('Data User ' . date('Y-m-d H:i:s') . '.pdf');
     }
+
 }
